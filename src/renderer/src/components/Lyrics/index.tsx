@@ -104,6 +104,7 @@ export default function Lyrics() {
           flex flex-col items-center gap-8
           overflow-y-auto scrollbar-hide
           text-center leading-snug
+          text-shadow-lg
         "
       >
         ...

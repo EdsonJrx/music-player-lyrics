@@ -1,6 +1,8 @@
 import { usePlayer } from '@/hooks/usePlayer'
 import { toAppProtocolPath } from '@renderer/utils/helper'
 import { useEffect, useRef, useState } from 'react'
+import { IoColorPalette, IoClose } from 'react-icons/io5'
+import { FaTools } from "react-icons/fa";
 
 export default function Header() {
   const ref = useRef<HTMLDivElement>(null)
@@ -62,13 +64,19 @@ export default function Header() {
           onClick={() => window.context.openSettings?.()}
           className="w-8 h-8 grid place-items-center rounded hover:bg-white/20"
         >
-          ⚙
+          <IoColorPalette />
+        </button>
+        <button
+          onClick={() => window.context.openSettings?.()}
+          className="w-8 h-8 grid place-items-center rounded hover:bg-white/20"
+        >
+          <FaTools />
         </button>
         <button
           onClick={() => window.context.close()}
           className="w-8 h-8 grid place-items-center rounded hover:bg-white/20"
         >
-          ✕
+          <IoClose />
         </button>
       </div>
     </div>

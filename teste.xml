@@ -1,0 +1,88 @@
+<eSocial xmlns="http://www.esocial.gov.br/schema/evt/evtComProd/v_S_01_03_00">
+    <evtComProd Id="ID2011223001660002025050518254900003">
+  
+      <!-- Identificação do evento -->
+      <ideEvento>
+        <indRetif>1</indRetif> <!-- Retificação: 1 = sim -->
+        <perApur>2025-04</perApur> <!-- Período de apuração -->
+        <tpAmb>1</tpAmb> <!-- Ambiente: 1 = produção -->
+        <procEmi>1</procEmi> <!-- Processo de emissão: 1 = aplicação do contribuinte -->
+        <verProc>12.1.2410.155</verProc> <!-- Versão do aplicativo emissor -->
+      </ideEvento>
+  
+      <!-- Identificação do empregador -->
+      <ideEmpregador>
+        <tpInsc>2</tpInsc> <!-- Tipo de inscrição: 2 = CNPJ -->
+        <nrInsc>01122300166</nrInsc> <!-- Número de inscrição -->
+      </ideEmpregador>
+  
+      <!-- Informações de comercialização da produção -->
+      <infoComProd>
+        <ideEstabel>
+          <nrInscEstabRural>01122300100172</nrInscEstabRural> <!-- CNPJ do estabelecimento rural -->
+  
+          <!-- Tipo de comercialização: indComerc = 3 (para adquirente pessoa física/jurídica com retenção) -->
+          <tpComerc>
+            <indComerc>3</indComerc>
+            <vrTotCom>44200.00</vrTotCom> <!-- Valor total comercializado -->
+  
+            <!-- Adquirente 1 -->
+            <ideAdquir>
+              <tpInsc>2</tpInsc>
+              <nrInsc>00336693176</nrInsc>
+              <vrComerc>16500.00</vrComerc>
+              <nfs>
+                <serie>1</serie>
+                <nrDocto>756791</nrDocto>
+                <dtEmisNF>2025-04-11</dtEmisNF>
+                <vlrBruto>16500.00</vlrBruto>
+                <vrCPDescPR>0.00</vrCPDescPR>
+                <vrRatDescPR>0.00</vrRatDescPR>
+                <vrSenarDesc>0.00</vrSenarDesc>
+              </nfs>
+            </ideAdquir>
+  
+            <!-- Adquirente 2 -->
+            <ideAdquir>
+              <tpInsc>2</tpInsc>
+              <nrInsc>03852424178</nrInsc>
+              <vrComerc>12950.00</vrComerc>
+              <nfs>
+                <serie>1</serie>
+                <nrDocto>756765</nrDocto>
+                <dtEmisNF>2025-04-30</dtEmisNF>
+                <vlrBruto>12950.00</vlrBruto>
+                <vrCPDescPR>0.00</vrCPDescPR>
+                <vrRatDescPR>0.00</vrRatDescPR>
+                <vrSenarDesc>0.00</vrSenarDesc>
+              </nfs>
+            </ideAdquir>
+  
+            <!-- Adquirente 3 -->
+            <ideAdquir>
+              <tpInsc>2</tpInsc>
+              <nrInsc>02562456815</nrInsc>
+              <vrComerc>14750.00</vrComerc>
+              <nfs>
+                <serie>1</serie>
+                <nrDocto>756363</nrDocto>
+                <dtEmisNF>2025-04-30</dtEmisNF>
+                <vlrBruto>14750.00</vlrBruto>
+                <vrCPDescPR>0.00</vrCPDescPR>
+                <vrRatDescPR>0.00</vrRatDescPR>
+                <vrSenarDesc>0.00</vrSenarDesc>
+              </nfs>
+            </ideAdquir>
+          </tpComerc>
+  
+          <!-- Outro tipo de comercialização: indComerc = 2 (sem intermediário, venda direta consumidor) -->
+          <tpComerc>
+            <indComerc>2</indComerc>
+            <vrTotCom>38500.00</vrTotCom>
+          </tpComerc>
+        </ideEstabel>
+      </infoComProd>
+  
+    </evtComProd>
+  </eSocial>
+  
