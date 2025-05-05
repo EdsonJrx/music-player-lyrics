@@ -13,7 +13,7 @@ export function parseLRC(lrc: string): LrcLine[] {
     if (!match) continue
 
     const [, min, sec, text] = match
-    const time = parseInt(min) * 60 + parseFloat(sec) - 1 // Adiciona 50ms para evitar que a letra apareça antes do tempo
+    const time = parseInt(min) * 60 + parseFloat(sec) - 1 // Adiciona 1s para evitar que a letra apareça antes do tempo
     result.push({ time, text: text.trim() })
   }
 

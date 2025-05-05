@@ -27,8 +27,6 @@ function createWindow() {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
-    backgroundMaterial: 'acrylic',
-    visualEffectState: 'active',
     autoHideMenuBar: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

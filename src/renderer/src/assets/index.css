@@ -13,7 +13,7 @@
 
     @apply select-none;
 
-    @apply bg-transparent;
+    @apply hover:bg-[#1c1c1c];
 
     @apply font-mono antialiased text-white;
 

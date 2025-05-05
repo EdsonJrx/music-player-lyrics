@@ -25,14 +25,16 @@ export default function Header() {
     <div
       ref={ref}
       className="
-        fixed top-0 left-0 w-full z-50
-        px-6 py-3
-        flex items-center justify-between gap-4
-      bg-white/10 backdrop-blur-md border-b border-white/10
-        opacity-0 translate-y-[-16px]
-        group-hover:opacity-100 group-hover:translate-y-0
-        transition-all duration-300 ease-in-out
-      "
+    fixed top-0 left-0 w-full z-50
+    flex items-center justify-between gap-4
+    px-6 py-3
+    bg-white/10
+    backdrop-blur-sm
+    backdrop-saturate-150
+    border-b border-white/10
+    opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0
+    transition-all duration-300 ease-in-out
+  "
     >
       <div className="flex items-center gap-3 overflow-hidden max-w-[75%]">
         <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0 bg-white/10">

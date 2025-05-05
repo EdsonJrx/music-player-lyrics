@@ -63,7 +63,7 @@ export default function Footer() {
         group-hover:opacity-100 group-hover:translate-y-0
         transition-all duration-300 ease-in-out
         z-50
-        rounded-2xl
+        rounded-2xl backdrop-blur-sm backdrop-saturate-150 border border-white/40
       "
       style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
     >
@@ -72,8 +72,6 @@ export default function Footer() {
         className="
           absolute inset-0 -z-10 rounded-2xl
           bg-gradient-to-tr from-white/30 via-white/15 to-white/5
-          backdrop-blur-[30px] backdrop-saturate-200
-          border border-white/15
           shadow-[0_2px_10px_rgba(0,0,0,0.25)]
         "
       />

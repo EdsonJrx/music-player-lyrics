@@ -99,7 +99,7 @@ export default function Lyrics() {
         ref={containerRef}
         className="
           relative z-20
-          h-[90%] w-full max-w-4xl
+          h-[95%] w-full max-w-4xl
           mx-auto px-8
           flex flex-col items-center gap-8
           overflow-y-auto scrollbar-hide
