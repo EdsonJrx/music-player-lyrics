@@ -1149,12 +1149,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.14.1, @types/node@npm:^22.7.7":
+"@types/node@npm:*, @types/node@npm:^22.14.1":
   version: 22.15.3
   resolution: "@types/node@npm:22.15.3"
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10c0/2879f012d1aeba0bfdb5fed80d165f4f2cb3d1f2e1f98a24b18d4a211b4ace7d64bf2622784c78355982ffc1081ba79d0934efc2fb8353913e5871a63609661f
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.9.0":
+  version: 20.17.32
+  resolution: "@types/node@npm:20.17.32"
+  dependencies:
+    undici-types: "npm:~6.19.2"
+  checksum: 10c0/2461df36f67704f68db64d33abc5ad00b4b35ac94e996adff88c7322f9572e3e60ddaeed7e9f34ae203120d2ba36cc931fd3a8ddddf0c63943e8600c365c6396
   languageName: node
   linkType: hard
 
@@ -2613,16 +2622,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:35.1.5":
-  version: 35.1.5
-  resolution: "electron@npm:35.1.5"
+"electron@npm:34.0.0":
+  version: 34.0.0
+  resolution: "electron@npm:34.0.0"
   dependencies:
     "@electron/get": "npm:^2.0.0"
-    "@types/node": "npm:^22.7.7"
+    "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10c0/d6a039074e3bbfab190686d7811d5af9309b4e87ff28717243cf0ff0abedcc96473ff20bba3b705bc82027cba862475e99f0df87b519238880600b952d35c0bf
+  checksum: 10c0/7d5c4465038fa5570864d0ee2b73673471baa7335ec8b4ea66ac56c8dcdc13075b213336282aa74592d5c70262dd388b2256ba6a08301604ae15b91653e06419
   languageName: node
   linkType: hard
 
@@ -4592,6 +4601,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime-db@npm:^1.54.0":
+  version: 1.54.0
+  resolution: "mime-db@npm:1.54.0"
+  checksum: 10c0/8d907917bc2a90fa2df842cdf5dfeaf509adc15fe0531e07bb2f6ab15992416479015828d6a74200041c492e42cce3ebf78e5ce714388a0a538ea9c53eece284
+  languageName: node
+  linkType: hard
+
 "mime-types@npm:^2.1.12":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
@@ -4601,21 +4617,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime-types@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "mime-types@npm:3.0.1"
+  dependencies:
+    mime-db: "npm:^1.54.0"
+  checksum: 10c0/bd8c20d3694548089cf229016124f8f40e6a60bbb600161ae13e45f793a2d5bb40f96bbc61f275836696179c77c1d6bf4967b2a75e0a8ad40fe31f4ed5be4da5
+  languageName: node
+  linkType: hard
+
 "mime@npm:^2.5.2":
   version: 2.6.0
   resolution: "mime@npm:2.6.0"
   bin:
     mime: cli.js
   checksum: 10c0/a7f2589900d9c16e3bdf7672d16a6274df903da958c1643c9c45771f0478f3846dcb1097f31eb9178452570271361e2149310931ec705c037210fc69639c8e6c
-  languageName: node
-  linkType: hard
-
-"mime@npm:^4.0.7":
-  version: 4.0.7
-  resolution: "mime@npm:4.0.7"
-  bin:
-    mime: bin/cli.js
-  checksum: 10c0/2fd22ee2012a3f1dcac7dd06b7dc314dd677ebcefb14355b7c9453f0092af6eabbe9d754d9849d2a1f346ddd53d716a851379be05386f7a6ccb40af4bd61f32b
   languageName: node
   linkType: hard
 
@@ -4842,7 +4858,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^4.3.4"
     autoprefixer: "npm:^10.4.21"
     clsx: "npm:^2.1.1"
-    electron: "npm:35.1.5"
+    electron: "npm:34.0.0"
     electron-builder: "npm:^25.1.8"
     electron-updater: "npm:^6.3.9"
     electron-vite: "npm:^3.1.0"
@@ -4851,7 +4867,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^5.2.0"
     eslint-plugin-react-refresh: "npm:^0.4.19"
     lucide-react: "npm:^0.507.0"
-    mime: "npm:^4.0.7"
+    mime-types: "npm:^3.0.1"
     node-addon-api: "npm:^8.3.1"
     node-fetch: "npm:2"
     postcss: "npm:^8.5.3"
@@ -6694,6 +6710,13 @@ __metadata:
     has-symbols: "npm:^1.1.0"
     which-boxed-primitive: "npm:^1.1.1"
   checksum: 10c0/7dbd35ab02b0e05fe07136c72cb9355091242455473ec15057c11430129bab38b7b3624019b8778d02a881c13de44d63cd02d122ee782fb519e1de7775b5b982
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.19.2":
+  version: 6.19.8
+  resolution: "undici-types@npm:6.19.8"
+  checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
   languageName: node
   linkType: hard
 

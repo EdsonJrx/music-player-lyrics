@@ -1,13 +1,10 @@
-// src/main/index.ts
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, ipcMain, Menu, nativeImage, protocol, shell, Tray } from 'electron'
 import { readFile } from 'fs/promises'
-import { Mime } from 'mime'
+import mime from 'mime-types' // ✅ compatível com CommonJS
 import fetch from 'node-fetch'
 import { join } from 'node:path'
 import { startSimple, stopSimple } from './simple-runner'
-
-const mime = new Mime()
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -25,13 +22,17 @@ function createWindow() {
     center: true,
     title: 'Music Player Lyrics',
     frame: false,
+    show: false,
+    resizable: true,
     transparent: true,
+    thickFrame: false,
+    hasShadow: false,
     backgroundColor: '#00000000',
     autoHideMenuBar: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
-      sandbox: true
+      sandbox: false
     }
   })
 
@@ -116,6 +117,7 @@ ipcMain.handle('fetch-lyrics', async (_e, { artist, title }) => {
     return null
   }
 })
+
 // ─── Ciclo de vida do app ─────────────────────────────────────────────
 app.whenReady().then(() => {
   // 🔐 Protocolo seguro para imagens
@@ -126,7 +128,7 @@ app.whenReady().then(() => {
       const data = await readFile(filePath)
 
       respond({
-        mimeType: mime.getType(filePath) || 'application/octet-stream',
+        mimeType: mime.lookup(filePath) || 'application/octet-stream',
         data
       })
     } catch (err) {
@@ -135,7 +137,7 @@ app.whenReady().then(() => {
     }
   })
 
-  startSimple() // inicia simple.exe
+  startSimple()
   createWindow()
 
   electronApp.setAppUserModelId('com.electron')

@@ -17,7 +17,7 @@ export default function App() {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col h-full w-full group bg-transparent relative overflow-hidden"
+      className="flex flex-col h-full w-full group bg-transparent relative overflow-hidden  hover:bg-[#1c1c1c] hover:border rounded-xl border-[#1c1c1c] "
     >
       {/* Agora tudo dentro da área arrastável */}
       <Header />
