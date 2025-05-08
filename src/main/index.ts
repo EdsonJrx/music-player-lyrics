@@ -1,32 +1,113 @@
+/******************************************************************
+ *  Processo principal do MPLyrics – inclui WebSocket + addon.node
+ ******************************************************************/
+
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, ipcMain, Menu, nativeImage, protocol, shell, Tray } from 'electron'
 import { readFile } from 'fs/promises'
-import mime from 'mime-types' // ✅ compatível com CommonJS
+import mime from 'mime-types'
 import fetch from 'node-fetch'
-import { join } from 'node:path'
-import { startSimple, stopSimple } from './simple-runner'
+import { existsSync } from 'node:fs'
+import path, { join } from 'node:path'
+import { WebSocketServer } from 'ws'
 
+/* ----------------------- Globals ----------------------- */
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 let isQuiting = false
 
-const RESOURCES_PATH = app.isPackaged
-  ? join(process.resourcesPath)
-  : join(__dirname, '../../resources')
+const isDev = !app.isPackaged
+const RESOURCES_PATH = isDev
+  ? path.join(__dirname, '../../resources')
+  : path.join(process.resourcesPath)
 
-// ─── Cria a janela principal ─────────────────────────────────────────
+/* ------------------- Addon & WS ------------------------ */
+function startAddonServer() {
+  // carrega o módulo nativo
+  const addonPath = isDev
+    ? path.join(__dirname, 'addon.node') // dev: out/main/
+    : path.join(process.resourcesPath, 'addon.node') // prod: resources/
+
+  const addon = require(addonPath)
+  addon.wnpInit()
+
+  const wss = new WebSocketServer({ port: 17070 }, () =>
+    console.log('🚀  WS servidor na porta 17070')
+  )
+
+  wss.on('connection', (ws) => {
+    console.log('📡  Cliente conectado')
+
+    const interval = setInterval(() => {
+      try {
+        const data = addon.getActivePlayer()
+        if (data?.id !== -1) ws.send(JSON.stringify(data))
+      } catch (err) {
+        console.error('🚨  Erro ao enviar dados:', err)
+      }
+    }, 1000)
+
+    ws.on('message', (msg) => {
+      try {
+        const { type, action, payload } = JSON.parse(msg.toString())
+        if (type !== 'action') return
+
+        switch (action) {
+          case 'playPause':
+            addon.tryPlayPause()
+            break
+          case 'next':
+            addon.tryNext()
+            break
+          case 'previous':
+            addon.tryPrevious()
+            break
+          case 'shuffle':
+            addon.toggleShuffle()
+            break
+          case 'seek':
+            addon.trySeek(Math.max(0, Math.floor(payload ?? 0)))
+            break
+          case 'volume':
+            addon.tryVolume(Math.max(0, Math.min(100, payload)))
+            break
+          case 'rating':
+            addon.tryRating(payload)
+            break
+          case 'repeat':
+            addon.setRepeat(Number(payload))
+            break
+          default:
+            console.warn('⚠️  Ação desconhecida:', action)
+        }
+      } catch (e) {
+        console.error('❌  Erro mensagem WS:', e)
+      }
+    })
+
+    ws.on('close', () => {
+      clearInterval(interval)
+      console.log('❌  Cliente OFF')
+    })
+  })
+
+  app.on('before-quit', () => {
+    addon.wnpUninit()
+    wss.close()
+  })
+}
+
+/* ----------------- Cria janela ------------------------- */
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     center: true,
-    title: 'Music Player Lyrics',
+    title: 'MPLyrics',
     frame: false,
     show: false,
     resizable: true,
     transparent: true,
-    thickFrame: false,
-    hasShadow: false,
     backgroundColor: '#00000000',
     autoHideMenuBar: true,
     webPreferences: {
@@ -59,9 +140,15 @@ function createWindow() {
   createTray()
 }
 
-// ─── Tray ─────────────────────────────────────────────────────────────
+/* ----------------------- Tray -------------------------- */
 function createTray() {
-  const iconPath = join(RESOURCES_PATH, 'tray.png')
+  const iconPath = path.join(RESOURCES_PATH, 'tray.png')
+
+  if (!existsSync(iconPath)) {
+    console.warn('⚠️  tray.png não encontrado em:', iconPath)
+    return
+  }
+
   const icon = nativeImage.createFromPath(iconPath)
 
   tray = new Tray(icon)
@@ -82,78 +169,64 @@ function createTray() {
   tray.on('click', () => (mainWindow?.isVisible() ? mainWindow.hide() : mainWindow?.show()))
 }
 
-// ─── IPC (atalhos da sua UI) ──────────────────────────────────────────
-function registerIpcEvents() {
-  ipcMain.on('window:minimize', () => mainWindow?.minimize())
-  ipcMain.on('window:maximize', () =>
-    mainWindow?.isMaximized() ? mainWindow.unmaximize() : mainWindow?.maximize()
-  )
-  ipcMain.on('window:close', () => mainWindow?.hide())
-  ipcMain.on('app:settings', () => console.log('Abrir configurações'))
-}
-
-ipcMain.handle('drag.getBounds', (e) => BrowserWindow.fromWebContents(e.sender)!.getBounds())
-ipcMain.handle('drag.setBounds', (e, b) =>
-  BrowserWindow.fromWebContents(e.sender)!.setBounds({
-    ...b,
-    x: Math.round(b.x),
-    y: Math.round(b.y)
+/* ---------------- IPC & Lyrics ------------------------ */
+function registerIpc() {
+  ipcMain.on('window:close', () => {
+    // se quiser apenas esconder:
+    mainWindow?.hide()
+    // …ou, se preferir realmente fechar a janela:
+    // mainWindow?.close()
   })
-)
-ipcMain.handle('fetch-lyrics', async (_e, { artist, title }) => {
-  try {
-    const query = `track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`
-    const searchRes = await fetch(`https://lrclib.net/api/search?${query}`)
-    const searchData = await searchRes.json()
-    const match = searchData[0]
+  /* ---- drag helpers (faltavam) ---- */
+  ipcMain.handle('drag.getBounds', (e) => BrowserWindow.fromWebContents(e.sender)!.getBounds())
 
-    if (!match?.id) return null
+  ipcMain.handle('drag.setBounds', (e, bounds) =>
+    BrowserWindow.fromWebContents(e.sender)!.setBounds({
+      ...bounds,
+      x: Math.round(bounds.x),
+      y: Math.round(bounds.y)
+    })
+  )
 
-    const lrcRes = await fetch(`https://lrclib.net/api/get/${match.id}`)
-    const lrcData = await lrcRes.json()
-    return lrcData?.syncedLyrics ?? null
-  } catch (err) {
-    console.error('Erro ao buscar letras:', err)
-    return null
-  }
-})
-
-// ─── Ciclo de vida do app ─────────────────────────────────────────────
-app.whenReady().then(() => {
-  // 🔐 Protocolo seguro para imagens
-  protocol.registerBufferProtocol('app', async (request, respond) => {
+  ipcMain.handle('fetch-lyrics', async (_e, { artist, title }) => {
     try {
-      const url = new URL(request.url)
-      const filePath = decodeURIComponent(url.pathname)
-      const data = await readFile(filePath)
-
-      respond({
-        mimeType: mime.lookup(filePath) || 'application/octet-stream',
-        data
-      })
+      const query = `track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`
+      const [match] = await fetch(`https://lrclib.net/api/search?${query}`).then((r) => r.json())
+      if (!match?.id) return null
+      const lrcData = await fetch(`https://lrclib.net/api/get/${match.id}`).then((r) => r.json())
+      return lrcData?.syncedLyrics ?? null
     } catch (err) {
-      console.error('Erro ao servir imagem:', err)
-      respond({ statusCode: 404 })
+      console.error('Erro ao buscar letras:', err)
+      return null
     }
   })
+}
 
-  startSimple()
+/* --------------- App lifecycle ------------------------ */
+app.whenReady().then(() => {
+  startAddonServer()
   createWindow()
+  registerIpc()
 
   electronApp.setAppUserModelId('com.electron')
   app.on('browser-window-created', (_, win) => optimizer.watchWindowShortcuts(win))
-  registerIpcEvents()
-
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  // protocolo seguro para imagens
+  protocol.registerBufferProtocol('app', async (req, res) => {
+    try {
+      const filePath = decodeURIComponent(new URL(req.url).pathname)
+      const data = await readFile(filePath)
+      res({ mimeType: mime.lookup(filePath) || 'application/octet-stream', data })
+    } catch {
+      res({ statusCode: 404 })
+    }
+  })
 })
 
-app.on('before-quit', () => {
-  isQuiting = true
-  stopSimple()
-})
-
+app.on('before-quit', () => (isQuiting = true))
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })

@@ -1,28 +1,18 @@
-'use client'
-import { useEffect, useRef } from 'react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Lyrics from '@/components/Lyrics'
-import { enableDrag } from '@shared/drag'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import Header from './components/Header'
+import ThemeSettings from './pages/ThemeSettings'
+import AppSettings from './pages/AppSettings'
+import Home from './pages/Home'
 
 export default function App() {
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (containerRef.current) {
-      enableDrag(containerRef.current)
-    }
-  }, [])
-
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col h-full w-full group bg-transparent relative overflow-hidden  hover:bg-[#1c1c1c] hover:border rounded-xl border-[#1c1c1c] "
-    >
-      {/* Agora tudo dentro da área arrastável */}
+    <MemoryRouter>
       <Header />
-      <Lyrics />
-      <Footer />
-    </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/theme" element={<ThemeSettings />} />
+        <Route path="/settings" element={<AppSettings />} />
+      </Routes>
+    </MemoryRouter>
   )
 }

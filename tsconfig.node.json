@@ -8,7 +8,11 @@
     "src/shared/drag.ts", "src/shared/parseLRC.ts", "src/shared/fetchLyrics.ts",
   ],
   "compilerOptions": {
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
     "composite": true,
+    "module": "es2015",
+    "esModuleInterop": true,
     "types": [
       "electron-vite/node"
     ],

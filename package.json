@@ -10,15 +10,14 @@
     "lint": "eslint --cache .",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
-    "typecheck": "npm run typecheck:node && npm run typecheck:web",
-    "start": "electron-vite preview",
+    "typecheck": "yarn typecheck:node && yarn typecheck:web",
     "dev": "electron-vite dev",
-    "build": "npm run typecheck && electron-vite build",
+    "start": "electron-vite preview",
+    "build": "yarn typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "npm run build && electron-builder --dir",
-    "build:win": "npm run build && electron-builder --win",
-    "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "dist": "yarn build && electron-builder",
+    "dist:win": "yarn build && electron-builder --win",
+    "build:unpack": "yarn build && electron-builder --dir"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
@@ -28,6 +27,7 @@
     "mime-types": "^3.0.1",
     "node-addon-api": "^8.3.1",
     "node-fetch": "2",
+    "react-router-dom": "^7.5.3",
     "tailwind-scrollbar-hide": "^2.0.0",
     "tailwindcss-textshadow": "^2.1.3",
     "ws": "^8.18.1"
@@ -36,6 +36,7 @@
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@swc/core": "^1.11.24",
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.2",
@@ -59,7 +60,8 @@
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^3.4",
     "typescript": "^5.8.3",
-    "vite": "^6.2.6"
+    "vite": "^6.2.6",
+    "vite-plugin-static-copy": "^2.3.1"
   },
-  "packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538"
+  "packageManager": "yarn@4.9.1"
 }

@@ -1,16 +1,15 @@
 // addon-server.js
 const { WebSocketServer } = require('ws')
 const path = require('node:path')
-const { app } = require('electron') // <-- novo
 
-/* ─────── escolher o caminho correto do .node ─────── */
-const isDev = !app || !app.isPackaged // ← funciona mesmo fora do Electron
-
+const isDev = process.env.ADDON_DEV === '1' // ← usa flag passada
 const addonPath = isDev
   ? path.join(__dirname, 'native', 'build', 'Release', 'addon.node')
-  : path.join(process.resourcesPath, 'addon.node') // ← produção
+  : path.join(process.resourcesPath, 'addon.node')
 
-const addon = require(addonPath)
+console.log('[addon-server] usando', addonPath)
+
+const addon = require(addonPath) // ← se falhar, verá o erro no console
 addon.wnpInit()
 
 /* ─────────── servidor WS ─────────── */
